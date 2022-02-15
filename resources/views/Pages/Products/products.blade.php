@@ -1,0 +1,206 @@
+@extends('Templates.Master')
+@section('content')
+<div
+      class="relative flex flex-col min-w-0 break-words w-full mb-6 -mt-10 shadow-lg rounded bg-white"
+    >
+<div class="rounded-t mb-0 px-4 py-3 border-0">
+  <div class="flex flex-wrap items-center">
+    <div
+      class="relative w-full px-4 max-w-full flex-grow flex-1"
+    >
+      <h3 class="font-semibold text-lg text-blueGray-700">
+        Input Produk
+      </h3>
+    </div>
+  </div>
+</div>
+
+<form class="relative m-auto mb-4 w-full max-w-lg" action="{{ route('create.product') }}" method="POST">
+  @csrf
+  <div class="flex flex-wrap -mx-3 mb-2">
+    <div class="md:w-1/2 px-3 md:mb-0">
+      <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-first-name">
+        Nama Produk
+      </label>
+      <input class="appearance-none block w-full bg-gray-200 text-gray-700 border @error('product_name')
+      border-red-500 @enderror  rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-first-name" name="product_name" type="text" value="{{ old('product_name') }}" placeholder="Nama Produk">
+      @error('product_name')
+      <p class="text-red-500 text-xs mb-4 italic">{{ $message }}</p>
+      @enderror
+      {{-- <p class="text-red-500 mb-4 text-xs italic">Please fill out this field.</p> --}}
+    </div>
+    <div class="md:w-1/2 px-3">
+      <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-last-name">
+        Kategori
+      </label>
+      <select class="appearance-none inlib w-full  @error('category_id')
+      border-red-500 @enderror bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="category_id" required>
+      <option value="">--Pilih--</option>
+      @foreach ($category as $category)
+      <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->Category_name }}</option>
+      @endforeach
+      </select>
+      @error('category_id')
+      <p class="text-red-500 mb-4 text-xs italic">{{ $message }}</p>
+      @enderror
+    </div>
+    <div class="px-3">
+      <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-password">
+        Vendor
+      </label>
+      <select class="appearance-none inlib w-full bg-gray-200 text-gray-700 border  @error('vendor_id')
+      border-red-500 @enderror border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="vendor_id">
+        <option value="">--Pilih--</option>
+        @foreach ($vendor as $vendor)
+      <option value="{{ $vendor->id }}"{{ old('vendor_id') == $vendor->id ? 'selected' : '' }}>{{ $vendor->vendor_name }}</option>
+      @endforeach
+      </select>
+      @error('vendor_id')
+      <p class="text-red-500 text-xs mb-4 italic">{{ $message }}</p>
+      @enderror
+      {{-- <p class="text-gray-600 text-xs italic">Make it as long and as crazy as you'd like</p> --}}
+    </div>
+    <div class="md:w-1/3 mt-6 px-3 mb-6 md:mb-0">
+      {{-- <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="number" placeholder="Albuquerque"> --}}
+      <button id="additem" class="appearance-none block w-full bg-pink-500 text-white font-bold text-lg rounded py-3 px-4 leading-tight focus:outline-none focus:border-gray-500">+</button>
+    </div>
+    {{-- <div class="md:w-1/3 px-3 mb-6 md:mb-0">
+      <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-city">
+        Jumlah Item
+      </label>
+    </div> --}}
+  </div>
+  <div id="items" class="mt-4">
+    <div class="flex flex-wrap -mx-3 mb-2">
+      <div class=" md:w-1/3 px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-state">
+          Warna
+        </label>
+        <div class="relative">
+          <input class="appearance-none block w-full bg-gray-200 text-blueGray-700border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" name="color[]"  placeholder="90210">
+        </div>
+        @error('color.*')
+        <p class="text-red-500 text-xs mb-4 italic">{{ $message }}</p>
+        @enderror
+      </div>
+      <div class=" md:w-1/3 px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-zip">
+          Ukuran
+        </label>
+        <input class="appearance-none block w-full bg-gray-200 text-blueGray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="size[]" type="text" placeholder="90210">
+      </div>
+      {{-- <div class=" md:w-1/3 px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-zip">
+          Harga
+        </label>
+        <input class="appearance-none block w-full bg-gray-200 text-blueGray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" name="harga[]" type="text" placeholder="90210">
+      </div> --}}
+      {{-- <div class=" md:w-1/3 px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-zip">
+          Margin Harga
+        </label>
+        <input class="appearance-none block w-full bg-gray-200 text-blueGray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" type="text" name="margin[]" placeholder="90210">
+      </div> --}}
+      {{-- <div class=" md:w-1/3 px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-zip">
+          Harga Jual
+        </label>
+        <input class="appearance-none block w-full bg-gray-200 text-blueGray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" name="hargajual[]" type="number" placeholder="90210">
+      </div> --}}
+      {{-- <div class=" md:w-1/3 px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-zip">
+          Jumlah Item
+        </label>
+        <input class="appearance-none block w-full bg-gray-200 text-blueGray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" name="jumlahitem[]" type="number" placeholder="90210">
+      </div>  --}}
+      {{-- <div class="md:w-1/3 px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-zip">
+          Deskripsi
+        </label>
+        <textarea class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" name="description[]"  placeholder="90210"></textarea>
+      </div>  --}}
+      <div class=" md:w-1/3 px-3 mb-6 md:mb-0 mt-8">
+        <label  class="removeitem bg-pink-500 font-bold font-lg rounded mt-6 px-4 py-2 text-white font-lg">-<label>
+      </div> 
+    </div>
+  </div>
+  
+  
+  <div class="md:w-1/3 px-3 mb-6 md:mb-0 mt-3">
+    <button type="submit" class="bg-pink-500 rounded px-4 py-2 text-white font-lg">Simpan<button>
+  </div>
+</form>
+</div>
+@endsection
+@section('footerscript')
+<script>
+   var item = ` <div id="items" class="mt-4">
+    <div class="flex flex-wrap -mx-3 mb-2">
+      <div class=" md:w-1/3 px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-state">
+          Color
+        </label>
+        <div class="relative">
+          <input class="appearance-none block w-full bg-gray-200 text-blueGray-700border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" name="color[]" placeholder="90210">
+        </div>
+      </div>
+      <div class=" md:w-1/3 px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-zip">
+          Size
+        </label>
+        <input class="appearance-none block w-full bg-gray-200 text-blueGray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="size[]" type="text" placeholder="90210">
+      </div>
+      <div class=" md:w-1/3 px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-zip">
+          Harga
+        </label>
+        <input class="appearance-none block w-full bg-gray-200 text-blueGray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" name="harga[]" type="text" placeholder="90210">
+      </div>
+      <div class=" md:w-1/3 px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-zip">
+          Margin Harga
+        </label>
+        <input class="appearance-none block w-full bg-gray-200 text-blueGray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" type="text" name="margin[]" placeholder="90210">
+      </div>
+      <div class=" md:w-1/3 px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-zip">
+          Harga Jual
+        </label>
+        <input class="appearance-none block w-full bg-gray-200 text-blueGray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" name="hargajual[]" type="number" placeholder="90210">
+      </div>
+      <div class=" md:w-1/3 px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-zip">
+          Jumlah Item
+        </label>
+        <input class="appearance-none block w-full bg-gray-200 text-blueGray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" name="jumlahitem[]" type="number" placeholder="90210">
+      </div> 
+      <div class=" md:w-1/3 px-3 mb-6 md:mb-0">
+        <label class="block uppercase tracking-wide text-blueGray-700 text-xs font-bold mb-2" for="grid-zip">
+          Deskripsi
+        </label>
+        <textarea class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" name="description[]"  placeholder="90210"></textarea>
+      </div> 
+      <div class=" md:w-1/3 px-3 mb-6 md:mb-0 mt-8">
+        <label  class="removeitem bg-pink-500 font-bold font-lg rounded mt-6 px-4 py-2 text-white font-lg">-<label>
+      </div> 
+    </div>
+  </div>`;
+  const Additem = document.getElementById('additem');
+  const Items = document.getElementById('items');
+  const removeitem = document.querySelector('.removeitem');
+  Additem.addEventListener('click',function (e) {
+    e.preventDefault()
+   
+    Items.innerHTML += item;
+    removeitem.addEventListener('click',function (e) {
+      e.preventDefault();
+      console.log('e')
+    })  
+  })
+  removeitem.addEventListener('click',function (e) {
+      e.preventDefault();
+      console.log('e')
+    })  
+</script>
+    
+@endsection
